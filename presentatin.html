@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Data Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #eef1f6;
+        }
+        .container {
+            max-width: 700px;
+            margin: 20px auto;
+            background: #495e74;
+            padding: 20px;
+            box-shadow: 0 4px 10px white;
+            border-radius: 10px;
+            height:300px;
+        }
+        .sidebar {
+            width: 200px;
+            background:#2c3e50;
+            color: rgb(220, 221, 214);
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            height: 250px;
+        }
+        canvas {
+            background: rgb(247, 247, 247);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px ;
+            height: 100px;
+            width: 100% !important;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+            height:250px;
+        }
+        button {
+            background: #2980b9;
+            color:white (238, 75, 11);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1f6691;
+        }
+        label {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <p> Upload your CSV file. </p>
+        <input type="file" id="fileInput" accept=".csv, .json">
+    </div>
+    <div class="content">
+        <div class="container">
+            <h2 style="color: white;"><center> Data Visualization</h2> </center>
+            <p style="color: white;">Select which chart types to display.</p>
+            <div class="controls">
+                <div>
+                    <input type="checkbox" id="barChart" /> <label for="barChart">Bar Chart</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="lineChart" /> <label for="lineChart">Line Chart</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="pieChart" /> <label for="pieChart">Pie Chart</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="doughnutChart" /> <label for="doughnutChart">Doughnut Chart</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="radarChart" /> <label for="radarChart">Radar Chart</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="polarAreaChart" /> <label for="polarAreaChart">Polar Area Chart</label>
+                </div>
+                <button onclick="generateSelectedCharts()">Generate Selected Charts</button>
+            </div>
+            <div class="chart-container" id="chartContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let chartInstances = [];
+        let chartTypes = {
+            bar: 'bar',
+            line: 'line',
+            pie: 'pie',
+            doughnut: 'doughnut',
+            radar: 'radar',
+            polarArea: 'polarArea'
+        };
+
+        document.getElementById('fileInput').addEventListener('change', handleFile);
+
+        function handleFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const content = e.target.result;
+                    if (file.name.endsWith('.csv')) {
+                        processCSV(content);
+                    } else if (file.name.endsWith('.json')) {
+                        processJSON(content);
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function processCSV(content) {
+            const rows = content.split('\n').map(row => row.split(','));
+            const labels = rows[0];
+            const data = rows.slice(1).map(row => row.map(Number));
+            generateCharts(labels, data);
+        }
+
+        function processJSON(content) {
+            const jsonData = JSON.parse(content);
+            const labels = Object.keys(jsonData);
+            const data = Object.values(jsonData);
+            generateCharts(labels, data);
+        }
+
+        function generateCharts(labels, data) {
+            // Destroy any existing charts
+            chartInstances.forEach(chart => chart.destroy());
+            chartInstances = [];
+
+            // Get the selected chart types from the checkboxes
+            const selectedTypes = [];
+            if (document.getElementById('barChart').checked) selectedTypes.push('bar');
+            if (document.getElementById('lineChart').checked) selectedTypes.push('line');
+            if (document.getElementById('pieChart').checked) selectedTypes.push('pie');
+            if (document.getElementById('doughnutChart').checked) selectedTypes.push('doughnut');
+            if (document.getElementById('radarChart').checked) selectedTypes.push('radar');
+            if (document.getElementById('polarAreaChart').checked) selectedTypes.push('polarArea');
+
+            
+
+            // Create the charts for each selected type
+            selectedTypes.forEach((type, index) => {
+                const ctx = document.createElement('canvas');
+                document.getElementById('chartContainer').appendChild(ctx);
+                const chart = new Chart(ctx, {
+                    type: chartTypes[type],
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: `Dataset ${index + 1}`,
+                            data: data[index % data.length],
+                            backgroundColor: ['blue', 'red', 'green', 'orange', 'purple', 'yellow']
+                        }]
+                    }
+                });
+                chartInstances.push(chart);
+            });
+        }
+
+        function generateSelectedCharts() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length > 0) {
+                const fileEvent = new Event('change');
+                fileInput.dispatchEvent(fileEvent);
+            } else {
+                alert("Please upload a dataset first.");
+            }
+        }
+    </script>
+</body>
+</html>

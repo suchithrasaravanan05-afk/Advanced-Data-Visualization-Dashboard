@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Data Dashboard - Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f1f2f6;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .sidebar ul li {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-left: 270px; /* Adjust for sidebar */
+            padding: 40px;
+            width: 100%;
+        }
+
+        .homepage-container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #2980b9;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            background-color: #3498db;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<a href="login.html">login</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Features</h2>
+        <ul>
+            <li><a href="Visualize.html">Visualize Key Metrics</a></li>
+            <li><a href="Charts.html">About Charts</a></li>
+            <li><a href="explore.html">Explore Insights</a></li>
+            <li><a href="#">Interactive Data Exploration</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="homepage-container">
+            <h1>Welcome to the Interactive Data Dashboard</h1>
+            <p>Upload your dataset and explore different visualizations to understand key metrics and trends.</p>
+            <p>Our platform provides an easy way to upload CSV and JSON data and generate multiple types of charts to gain insights from your data.</p>
+            <a href="info.html">Go to Dashboard</a>
+        </div>
+    </div>
+
+
+</body>
+</html>
